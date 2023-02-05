@@ -118,8 +118,9 @@ if update_link:
         st.code(answer, language="english")
     
     df = pd.DataFrame({"data": sexist})
-
+    df['data'][0] = max(0, df['data'][0] - 1)
+    df['average'] = df['data'].rolling(3).mean()
     st.subheader("Sexist text distribution from beginning to end:")
-    st.line_chart(sexist)
+    st.line_chart(df['average'])
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?
