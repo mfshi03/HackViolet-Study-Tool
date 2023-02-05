@@ -8,6 +8,7 @@ import time
 import validators
 import streamlit as st
 import openai
+import pandas as pd
 from gpt_index import GPTTreeIndex
 from gpt_index.readers.schema.base import Document
 
@@ -32,7 +33,7 @@ def find_values(id:str, json_repr:str) -> str:
     return results
 
 
-@st.cache(persist=True)
+@st.cache(persist=True, show_spinner=False)
 def crawl(url:str) -> str:
     '''
     This returns a string of all important text on a webpage
@@ -64,6 +65,7 @@ def crawl(url:str) -> str:
     text = re.sub(' +', ' ', text)
     return text
 
+
 def generatePrompt(base_prompt: str) -> str:
     '''
     prepends examples to prompt.
@@ -85,23 +87,39 @@ if update_link:
     st.success("Website Read!!!")
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    prompt = generatePrompt(text[:3000])
-    print(prompt)
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        temperature=0.3,
-        max_tokens=3000,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
+    with st.spinner("Identifying sexist text..."):
+        prompt = generatePrompt(text[:3000])
+
+        print(prompt)
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            temperature=0.3,
+            max_tokens=3000,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        )
+        time.sleep(5)
     
     answer = str(response["choices"][0]["text"])
     print("98 " + answer)
     st.subheader("These biased spans of text were detected:")
     answers = answer.split(' <SEP> ')
+    arr = []
+    text = text[0:3000]
+
+    sexist = [0 for i in range(0,len(text), 30)]
     for answer in answers:
+        print(text.find(answer)//30)
+        val = 0 if text.find(answer)//30 < 0 else text.find(answer)//30
+        val = 99 if val > 100 else val
+        sexist[val] = 1
         st.code(answer, language="english")
+    
+    df = pd.DataFrame({"data": sexist})
+
+    st.subheader("Sexist text distribution from beginning to end:")
+    st.line_chart(sexist)
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?

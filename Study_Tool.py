@@ -31,12 +31,12 @@ def find_values(id:str, json_repr:str) -> str:
     json.loads(json_repr, object_hook=_decode_dict) # Return value ignored.
     return results
 
-@st.experimental_singleton
+@st.experimental_singleton(show_spinner=False)
 def store_index(Documents: list[Document]):
     return GPTTreeIndex(Documents)
 
 
-@st.experimental_memo #@st.cache(persist=True)
+@st.experimental_memo(show_spinner=False) #@st.cache(persist=True)
 def crawl(url:str) -> str:
     '''
     This returns a string of all important text on a webpage
@@ -73,7 +73,7 @@ def crawl(url:str) -> str:
     text = re.sub(' +', ' ', text)
     return text
 
-@st.experimental_memo
+@st.experimental_memo(show_spinner=False)
 def answer_question(_index, query):
     return _index.query(query, verbose=True)
 
