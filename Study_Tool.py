@@ -31,8 +31,12 @@ def find_values(id:str, json_repr:str) -> str:
     json.loads(json_repr, object_hook=_decode_dict) # Return value ignored.
     return results
 
+@st.experimental_singleton
+def store_index(Documents: list[Document]):
+    return GPTTreeIndex(Documents)
 
-@st.cache(persist=True)
+
+@st.experimental_memo #@st.cache(persist=True)
 def crawl(url:str) -> str:
     '''
     This returns a string of all important text on a webpage
@@ -69,15 +73,16 @@ def crawl(url:str) -> str:
     text = re.sub(' +', ' ', text)
     return text
 
-@st.cache
-def answer_question(index, query):
-    return index.query(query, verbose=True)
+@st.experimental_memo
+def answer_question(_index, query):
+    return _index.query(query, verbose=True)
 
 
 """
 ### HackViolet App
     Your study tool
 """
+
 
 
 url = st.text_input('Enter a link')
@@ -97,7 +102,7 @@ if update_link:
     st.write("Your scraped text preview:", text[0:500])
     st.session_state["text"] = text
     with st.spinner('Indexing your text ....'):
-        st.session_state["index"] = GPTTreeIndex([Document(text)])
+        st.session_state["index"] = store_index([Document(text)])
         time.sleep(5)
     st.success("Your text has been indexed")
 
@@ -122,7 +127,7 @@ if update_query:
     )
 
     answer = str(st.session_state["answer"])
-    search = "https://www.google.com/search?q="
+    search = "https://en.wikipedia.org/w/index.php?search="
     entities = response["choices"][0]["text"].strip().split(",")
     #answer_sep = answer.split(" ")
     print(entities)
@@ -135,7 +140,7 @@ if update_query:
             answer = answer.replace(entities[i], "[" + entities[i] + "](" +  search +  query+ ")")
 
     #print(answer)
-    st.markdown(answer)
+    st.markdown("Your answer with links:",answer)
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?
 
