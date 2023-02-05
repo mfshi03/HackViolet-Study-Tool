@@ -97,8 +97,6 @@ update_query = st.button("Ask")
 
 question = query #new line
 
-update_query = st.button("Update Query")
-
 
 if update_link:
     with st.spinner('Reading your website...'):

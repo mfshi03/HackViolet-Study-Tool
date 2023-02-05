@@ -38,7 +38,7 @@ def find_values(id:str, json_repr:str) -> str:
     return results
 
 
-@st.cache(persist=True)
+@st.cache(persist=True, show_spinner=False)
 def crawl(url:str) -> str:
     '''
     This returns a string of all important text on a webpage
