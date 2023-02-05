@@ -140,7 +140,7 @@ if update_query:
             answer = answer.replace(entities[i], "[" + entities[i] + "](" +  search +  query+ ")")
 
     #print(answer)
-    st.markdown("Your answer with links:",answer)
+    st.markdown("Your answer with links:" + answer)
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?
 
