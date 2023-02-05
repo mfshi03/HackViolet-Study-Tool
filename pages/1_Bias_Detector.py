@@ -68,7 +68,7 @@ def generatePrompt(base_prompt: str) -> str:
     '''
     prepends examples to prompt.
     '''
-    prefix = 'Give multiple sections of the prompt text that are sexist or racist or promote sterotypes. Prompt: Andrew Tate says women belong in the home, can’t drive, and are a man’s property. He also thinks rape victims must “bear responsibility” for their attacks and dates women aged 18–19 because he can “make an imprint” on them, according to videos posted online. In other clips, the British-American kickboxer – who poses with fast cars, guns and portrays himself as a cigar-smoking playboy – talks about hitting and choking women, trashing their belongings and stopping them from going out. Answer: women belong in the home, can’t drive, and are a man’s property <SEP> rape victims must “bear responsibility” for their attacks <SEP> talks about hitting and choking women, trashing their belongings and stopping them from going out. Prompt: '
+    prefix = 'Give multiple sections of the prompt text that are sexist or racist or promote gender sterotypes. Prompt: Andrew Tate says women belong in the home, can’t drive, and are a man’s property. He also thinks rape victims must “bear responsibility” for their attacks and dates women aged 18–19 because he can “make an imprint” on them, according to videos posted online. In other clips, the British-American kickboxer – who poses with fast cars, guns and portrays himself as a cigar-smoking playboy – talks about hitting and choking women, trashing their belongings and stopping them from going out. Answer: women belong in the home, can’t drive, and are a man’s property <SEP> rape victims must “bear responsibility” for their attacks <SEP> talks about hitting and choking women, trashing their belongings and stopping them from going out. Prompt: '
     suffix = "Answer: "
     return prefix + base_prompt + suffix
 
@@ -85,13 +85,13 @@ if update_link:
     st.success("Website Read!!!")
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    prompt = generatePrompt(text[:2000])
+    prompt = generatePrompt(text[:3000])
     print(prompt)
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=prompt,
         temperature=0.3,
-        max_tokens=2000,
+        max_tokens=3000,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
@@ -99,7 +99,9 @@ if update_link:
     
     answer = str(response["choices"][0]["text"])
     print("98 " + answer)
-
-    st.markdown(answer)
+    st.subheader("These biased spans of text were detected:")
+    answers = answer.split(' <SEP> ')
+    for answer in answers:
+        st.code(answer, language="english")
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?
