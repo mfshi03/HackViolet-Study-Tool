@@ -15,6 +15,11 @@ DIFFBOT = st.secrets["DIFFBOT"]
 OPEN_API_KEY = st.secrets["OPEN_API_KEY"]
 os.environ["OPENAI_API_KEY"] = OPEN_API_KEY
 
+
+
+if 'history' not in st.session_state:
+   st.session_state["history"] = []
+
 def find_values(id:str, json_repr:str) -> str:
     '''
     Finds relevant info from JSON text
@@ -88,6 +93,9 @@ def answer_question(_index, query):
 url = st.text_input('Enter a link')
 update_link = st.button("Update Link")
 query = st.text_input('Now ask a question about the text (add a question mark)')
+
+question = query #new line
+
 update_query = st.button("Update Query")
 
 
@@ -144,6 +152,10 @@ if update_query:
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?
 
+    st.session_state.history.append({"Link": url, "Questions": question, "Results": answer}) #new line
+
+    
+
 
 
 text = ''
@@ -153,3 +165,14 @@ if validators.url(url) and "?" in query:
     with st.spinner('Wait for it...'):
         text = crawl(url)
         time.sleep(5)
+
+placeholder = st.empty() #new line
+  
+with placeholder.container():
+   st.write(pd.DataFrame( st.session_state.history)) #new line
+
+
+if st.button("Clear History"):
+       placeholder =  st.empty()
+       st.session_state.history = []
+       
