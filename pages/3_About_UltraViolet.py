@@ -2,48 +2,51 @@ import requests
 import streamlit as st
 from streamlit_lottie import st_lottie
 
-st.set_page_config(page_title="About Us", page_icon=":sparkles:", layout="centered")
+st.set_page_config(page_title="About UltraViolet", page_icon=":sparkles:", layout="centered")
 
+#-loads the animations
 def load_lottieAnimation(url):
     request = requests.get(url)
     if request.status_code != 200:
         return None
     return request.json()
 
-#-Assets
+#-Assets/Animations
 lottie_learning = load_lottieAnimation("https://assets3.lottiefiles.com/packages/lf20_xxyvtiab.json")
 lottie_reason = load_lottieAnimation("https://assets4.lottiefiles.com/private_files/lf30_vAtD7F.json")
 lottie_better = load_lottieAnimation("https://assets5.lottiefiles.com/packages/lf20_8autcbbt.json")
 lottie_teamwork = load_lottieAnimation("https://assets8.lottiefiles.com/packages/lf20_fclga8fl.json")
 
-#-What is Study Tool
+#-What is UltraViolet
 with st.container():    
     left_column, right_column = st.columns(2)
     with left_column:
-        st.title("What is Study Tool?")
+        st.title("What is UltraViolet?")
         st.write("##")
         st.write(
             """
-            Study Tool is multifaceted learning website that allows anyone
+            UltraViolet is multifaceted learning website that allows anyone
             to enter a link and ask a question about the text in the link
-            for further clarificiation. Study Tool also has an additional
+            for further clarificiation. UltraViolet also has an additional
             bias detector that detects sexism from the text in the link
-            using an trained model.
+            using an trained model. Another great feature from UltraViolet
+            is that it generates flash cards based off of what your queries
+            and submitted links.
             """
         )
     with right_column:
         st_lottie(lottie_learning)  
 
-#-Why did we make Study Tool
+#-Why did we make UltraViolet
 with st.container():
     st.write("---")
     left_column, right_column = st.columns(2)
     with left_column:
-        st.title("Why did we make Study Tool?")
+        st.title("Why did we make UltraViolet?")
         st.write("##")
         st.write(
             """
-            We designed Study Tool in order to help anyone with a passion
+            We designed UltraViolet in order to help anyone with a passion
             for learning to be able to learn anything no matter their
             education level. We made the bias detector because we noticed
             a large amount of sexism and gender bias in a lot of text on
@@ -58,16 +61,16 @@ with st.container():
     with right_column:
         st_lottie(lottie_reason)
 
-#-Why use Study Tool
+#-Why use UltraViolet
 with st.container():
     st.write("---")
     left_column, right_column = st.columns(2)
     with left_column:
-        st.title("Why use Study Tool?")
+        st.title("Why use UltraViolet?")
         st.write("##")
         st.write(
             """
-            Study Tool is better than its competitors because:
+         UltraViolet is better than its competitors because:
             - It fits whatever criteria you have and you can ask it anything
             - It provides information about whether a document is sexist using a top of the line trained model
             - It is all in one website
