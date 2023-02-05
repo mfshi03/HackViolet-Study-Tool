@@ -60,6 +60,7 @@ six==1.16.0
 smmap==5.0.0
 SQLAlchemy==1.4.46
 streamlit==1.17.0
+streamlit-lottie==0.0.3
 tenacity==8.1.0
 tiktoken==0.2.0
 tokenizers==0.13.2

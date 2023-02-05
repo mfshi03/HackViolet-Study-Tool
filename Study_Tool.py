@@ -88,7 +88,7 @@ def answer_question(_index, query):
 url = st.text_input('Enter a link')
 update_link = st.button("Update Link")
 query = st.text_input('Now ask a question about the text (add a question mark)')
-update_query = st.button("Update Query")
+update_query = st.button("Ask")
 
 
 if update_link:

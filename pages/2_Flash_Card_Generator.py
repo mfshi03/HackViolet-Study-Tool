@@ -13,7 +13,7 @@ from gpt_index.readers.schema.base import Document
 
 """
 ### HackViolet App
-    Detect sexism in passages
+    Generates Flashcards from your text
 """
 
 
@@ -70,16 +70,53 @@ def crawl(url:str) -> str:
     text = re.sub(' +', ' ', text)
     return text
 
-def generatePrompt(base_prompt: str) -> str:
-    '''
-    prepends examples to prompt.
-    '''
-    prefix = 'Generate questions and answers about the following text: '
-    suffix = "Answer: "
-    return prefix + base_prompt + suffix
+def parse_to_dict(content: str, text: str) -> dict[str, str]:
+    lines = content.strip().split("\n")
+
+    questions = []
+    answers = []
+
+    for line in lines:
+        if "Q" == line[0:1]:
+            parts = line.split(":")
+            question = parts[1]
+            questions.append(question)
+
+        if "A" == line[0:1]:
+            parts = line.split(":")
+            answer = parts[1]
+            answers.append(answer)
+
+
+    while len(questions) != len(answers):
+        if len(questions) > len(answers):
+            del questions[:-1]
+        else:
+            del answers[:-1]
+
+    flash = dict()
+    flash['answers'] = answers
+    flash['questions'] = questions
+    return flash
+
+def gen_QA(query:str, length:int=100) -> dict[str,str]:
+    prompt = "Generate a list of study questions and answers in the form (Q:Question A:Answer) for the text: " + query
+    completion = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        max_tokens=length,
+        temperature=0.3,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    text = completion["choices"][0]["text"]
+    print(text)
+    dictionary = parse_to_dict(text,query)
+    return dictionary
 
 url = st.text_input('Enter a link')
-update_link = st.button("Update Link")
+update_link = st.button("Generate")
 
 if update_link:
     with st.spinner('Reading your website...'):
@@ -91,23 +128,15 @@ if update_link:
     st.success("Website Read!!!")
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    prompt = generatePrompt(text[:3000])
-    print(prompt)
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        temperature=0.3,
-        max_tokens=3000,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
-    
-    answer = str(response["choices"][0]["text"])
-    st.subheader("These biased spans of text were detected:")
-    answers = answer.split(' <SEP> ')
-    for answer in answers:
-        st.code(answer, language="english")
+    flashcards = gen_QA(text[:10000],length=300)
+    back = flashcards["answers"]
+    front = flashcards["questions"]
+    length = 3 if 3 <= len(back) else len(back)
+    for i in range(0, length):
+        with st.expander(front[i]):
+            st.write(back[i])
+
+
     # https://twitter.com/stuffmadehere
     # who is stuffmadehere?
     # https://www.theguardian.com/technology/2022/aug/06/andrew-tate-violent-misogynistic-world-of-tiktok-new-star
