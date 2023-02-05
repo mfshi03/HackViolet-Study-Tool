@@ -7,12 +7,13 @@ import json
 import time
 import validators
 import streamlit as st
+import openai
 from gpt_index import GPTTreeIndex
 from gpt_index.readers.schema.base import Document
 
 DIFFBOT = st.secrets["DIFFBOT"]
-OPEN_AI_KEY = st.secrets["OPEN_AI_KEY"]
-os.environ["OPENAI_API_KEY"] = OPEN_AI_KEY
+OPEN_API_KEY = st.secrets["OPEN_API_KEY"]
+os.environ["OPENAI_API_KEY"] = OPEN_API_KEY
 
 def find_values(id:str, json_repr:str) -> str:
     '''
@@ -68,10 +69,14 @@ def crawl(url:str) -> str:
     text = re.sub(' +', ' ', text)
     return text
 
+@st.cache
+def answer_question(index, query):
+    return index.query(query, verbose=True)
+
 
 """
 ### HackViolet App
-Your study tool
+    Your study tool
 """
 
 
@@ -98,12 +103,43 @@ if update_link:
 
 if update_query:
     with st.spinner("Thinking..."):
-        answer = st.session_state["index"].query(query, verbose=True)
+        answer = answer_question(st.session_state["index"], query)
         st.session_state["answer"] = answer
         time.sleep(5)
     st.success("Your answer was found")
     st.write("Your answer:", st.session_state["answer"])
-    
+
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt="Identify the entities comma separated and no incomplete entities:" + str(st.session_state["answer"]),
+        temperature=0.3,
+        max_tokens=50,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    answer = str(st.session_state["answer"])
+    search = "https://www.google.com/search?q="
+    entities = response["choices"][0]["text"].strip().split(",")
+    #answer_sep = answer.split(" ")
+    print(entities)
+    for i in range(len(entities)):
+        entities[i] = entities[i].strip().lower()
+        print(entities[i])
+        if entities[i] in answer and entities[i].replace(" ", "") != "":
+            print("works")
+            query = entities[i].replace(" ","+")
+            answer = answer.replace(entities[i], "[" + entities[i] + "](" +  search +  query+ ")")
+
+    #print(answer)
+    st.markdown(answer)
+    #https://twitter.com/stuffmadehere
+    # who is stuffmadehere?
+
+
 
 text = ''
 scraped = False
