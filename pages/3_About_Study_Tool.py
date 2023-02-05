@@ -4,13 +4,14 @@ from streamlit_lottie import st_lottie
 
 st.set_page_config(page_title="About Us", page_icon=":sparkles:", layout="centered")
 
+#-loads the animations
 def load_lottieAnimation(url):
     request = requests.get(url)
     if request.status_code != 200:
         return None
     return request.json()
 
-#-Assets
+#-Assets/Animations
 lottie_learning = load_lottieAnimation("https://assets3.lottiefiles.com/packages/lf20_xxyvtiab.json")
 lottie_reason = load_lottieAnimation("https://assets4.lottiefiles.com/private_files/lf30_vAtD7F.json")
 lottie_better = load_lottieAnimation("https://assets5.lottiefiles.com/packages/lf20_8autcbbt.json")
