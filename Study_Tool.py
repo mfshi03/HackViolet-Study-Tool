@@ -84,7 +84,7 @@ def answer_question(_index, query):
 
 
 """
-### HackViolet App
+### VioletIQ
     Your study tool
 """
 
