@@ -2,7 +2,7 @@ import requests
 import streamlit as st
 from streamlit_lottie import st_lottie
 
-st.set_page_config(page_title="About UltraViolet", page_icon=":sparkles:", layout="centered")
+st.set_page_config(page_title="About VioletIQ", page_icon=":sparkles:", layout="centered")
 
 #-loads the animations
 def load_lottieAnimation(url):
@@ -17,19 +17,19 @@ lottie_reason = load_lottieAnimation("https://assets4.lottiefiles.com/private_fi
 lottie_better = load_lottieAnimation("https://assets5.lottiefiles.com/packages/lf20_8autcbbt.json")
 lottie_teamwork = load_lottieAnimation("https://assets8.lottiefiles.com/packages/lf20_fclga8fl.json")
 
-#-What is UltraViolet
+#-What is VioletIQ
 with st.container():    
     left_column, right_column = st.columns(2)
     with left_column:
-        st.title("What is UltraViolet?")
+        st.title("What is VioletIQ?")
         st.write("##")
         st.write(
             """
-            UltraViolet is multifaceted learning website that allows anyone
+            VioletIQ is multifaceted learning website that allows anyone
             to enter a link and ask a question about the text in the link
-            for further clarificiation. UltraViolet also has an additional
+            for further clarificiation. VioletIQ also has an additional
             bias detector that detects sexism from the text in the link
-            using an trained model. Another great feature from UltraViolet
+            using an trained model. Another great feature from VioletIQ
             is that it generates flash cards based off of what your queries
             and submitted links.
             """
@@ -37,16 +37,16 @@ with st.container():
     with right_column:
         st_lottie(lottie_learning)  
 
-#-Why did we make UltraViolet
+#-Why did we make VioletIQ
 with st.container():
     st.write("---")
     left_column, right_column = st.columns(2)
     with left_column:
-        st.title("Why did we make UltraViolet?")
+        st.title("Why did we make VioletIQ?")
         st.write("##")
         st.write(
             """
-            We designed UltraViolet in order to help anyone with a passion
+            We designed VioletIQ in order to help anyone with a passion
             for learning to be able to learn anything no matter their
             education level. We made the bias detector because we noticed
             a large amount of sexism and gender bias in a lot of text on
@@ -61,16 +61,16 @@ with st.container():
     with right_column:
         st_lottie(lottie_reason)
 
-#-Why use UltraViolet
+#-Why use VioletIQ
 with st.container():
     st.write("---")
     left_column, right_column = st.columns(2)
     with left_column:
-        st.title("Why use UltraViolet?")
+        st.title("Why use VioletIQ?")
         st.write("##")
         st.write(
             """
-         UltraViolet is better than its competitors because:
+         VioletIQ is better than its competitors because:
             - It fits whatever criteria you have and you can ask it anything
             - It provides information about whether a document is sexist using a top of the line trained model
             - It is all in one website
