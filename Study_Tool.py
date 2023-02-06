@@ -7,6 +7,9 @@ import json
 import time
 import validators
 import streamlit as st
+
+from PIL import Image
+
 import openai
 from gpt_index import GPTTreeIndex
 from gpt_index.readers.schema.base import Document
@@ -14,6 +17,18 @@ from gpt_index.readers.schema.base import Document
 DIFFBOT = st.secrets["DIFFBOT"]
 OPEN_API_KEY = st.secrets["OPEN_API_KEY"]
 os.environ["OPENAI_API_KEY"] = OPEN_API_KEY
+
+image = Image.open('robot.jpeg')
+
+
+
+col1, mid, col2 = st.columns([1,5,20])
+with col1:
+   st.image(image, width =150, caption='Hello Friend!')
+with col2:
+   st.info('Hello. I am Aeye, your everyday helper. I was tasked to help you answer questions and notice any discrepancies in text (Pssst, maybe I can clarify your business financial patterns) ', icon="ℹ️")
+
+
 
 
 
