@@ -125,7 +125,7 @@ if update_query:
 
     response = openai.Completion.create(
         model="text-davinci-003",
-        prompt="Identify the entities comma separated and no incomplete entities:" + str(st.session_state["answer"]),
+        prompt="Identify the keywords comma separated and no incomplete keywords:" + str(st.session_state["answer"]),
         temperature=0.3,
         max_tokens=50,
         top_p=1,
@@ -145,9 +145,11 @@ if update_query:
             print("works")
             query = entities[i].replace(" ","+")
             answer = answer.replace(entities[i], "[" + entities[i] + "](" +  search +  query+ ")")
+            print(answer)
 
     #print(answer)
-    st.markdown("Your answer with links:" + answer)
+    st.write("Your answer with links:")
+    st.markdown(answer)
     #https://twitter.com/stuffmadehere
     # who is stuffmadehere?
 
